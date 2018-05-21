@@ -1,0 +1,89 @@
+{% extends 'cmdb/../base.html' %}
+
+{% block title %}主机详情{% endblock %}
+
+{% block page-header %}服务URL{% endblock %}
+
+{% block page-header-info %}查看 {{ response.0.name }} 详情
+
+    <a href="{% url 'service_url_delete' response.0.id %}">
+        <button class="btn btn-danger" type="button" style="float: right"> 删除</button>
+    </a>
+
+    <a href="{% url 'service_url_edit' response.0.id %}">
+        <button class="btn btn-info" type="button" style="float: right"> 编辑</button>
+    </a>
+{% endblock %}
+
+{% block page-content %}
+    <form class="form-horizontal">
+
+        <div class="form-horizontal"></div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">服务名称</label>
+            <div class="col-sm-9">
+                <input readonly="" type="text" class="col-xs-10 col-sm-5" id="form-input-readonly"
+                       value="{{ response.0.name }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">外网地址</label>
+            <div class="col-sm-9">
+                <a href="{{ response.0.web_url }}">
+                    <input readonly="" type="text" class="col-xs-10 col-sm-5" id="form-input-readonly"
+                           value="{{ response.0.web_url }}">
+                </a>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">真实地址</label>
+            <div class="col-sm-9">
+                <input readonly="" type="text" class="col-xs-10 col-sm-5" id="form-input-readonly"
+                       value="{{ response.0.real_url }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">协议</label>
+            <div class="col-sm-9">
+                <input readonly="" type="text" class="col-xs-10 col-sm-5" id="form-input-readonly"
+                       value="{{ response.0.get_connection_display }}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">认证</label>
+            <div class="col-sm-9">
+                <input readonly="" type="text" class="col-xs-10 col-sm-5" id="form-input-readonly"
+                       value=" {{ response.0.get_auth_display }} ">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">用户名</label>
+            <div class="col-sm-9">
+                <input readonly="" type="text" class="col-xs-10 col-sm-5" id="form-input-readonly"
+                       value="{% if response.0.username %}{{ response.0.username }}{% endif %}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">密码</label>
+            <div class="col-sm-9">
+                <input readonly="" type="text" class="col-xs-10 col-sm-5" id="form-input-readonly"
+                       value="{% if response.0.password %}{{ response.0.password }}{% endif %}">
+            </div>
+        </div>
+      <!--  <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">密码</label>
+            <div class="col-sm-9">
+                <select class="col-xs-10  col-sm-5" id="form-field-select-1">
+                    <option>1</option>
+                    <option selected >2</option>
+                    <option >3</option>
+                </select>
+            </div>
+        </div> -->
+    </form>
+{% endblock %}
+

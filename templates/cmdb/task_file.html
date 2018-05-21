@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+
+{% block title %}文件分发{% endblock %}
+{% block page-header %}文件分发{% endblock %}
+{% block page-header-info %}查看{% endblock %}
+
+
+{% block page-content %}
+    {% csrf_token %}
+    <div class="row">
+
+        <div class="col-lg-4">
+            <div class="panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">主机列表</h3>
+                </div>
+                <div class="panel-body">
+                    <div class="list-group bord-no">
+                        <a onclick="HostListDisplayToggle(this)" class="list-group-item " href="#">
+                            <input type="checkbox" onclick="SelectGroup(this)">
+                            未分组主机
+                            <span class="badge badge-primary">{{ request.user.bind_hosts.count }}</span>
+                        </a>
+                        <ol class="hide">
+                            {% for bind_host in request.user.bind_hosts.all %}
+                                <li>
+                                    <input type="checkbox" select_host="true"
+                                           value="{{ bind_host.id }}">{{ bind_host.host.hostname }}({{ bind_host.host.ip_addr }})@{{ bind_host.remote_user.username }}
+                                </li>
+                            {% endfor %}
+                        </ol>
+
+                        {% for host_group in request.user.host_groups.select_related %}
+
+                            <a onclick="HostListDisplayToggle(this)" class="list-group-item " href="#">
+                                <input type="checkbox" onclick="SelectGroup(this)">
+                                {{ host_group.name }}
+                                <span class="badge badge-primary">{{ host_group.bind_hosts.count }}</span>
+                            </a>
+                            <ol class="hide">
+                                {% for bind_host in host_group.bind_hosts.all %}
+                                    <li>
+                                        <input type="checkbox" select_host="true"
+                                               value="{{ bind_host.id }}">{{ bind_host.host.hostname }}({{ bind_host.host.ip_addr }})@{{ bind_host.remote_user.username }}
+                                    </li>
+                                {% endfor %}
+                            </ol>
+
+
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-8">
+
+        <div class="panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">文件分发</h3>
+            </div>
+            <div class="panel-body">
+                <select onchange="SelectFileTransferType(this)" class="form-control" name="file_transfer_type">
+                    <option value="send">发送文件到远程</option>
+                    <option value="get">从远程下载文件</option>
+
+                </select>
+
+                <input class="form-control" type="text"  id="local_file_path" placeholder="本地文件路径">
+                <input class="form-control"  type="text"  id="remote_file_path" placeholder="远程文件路径">
+                <input type="button" id='post_task_btn'  onclick="PostTask(this,'file_transfer')" class="btn btn-success pull-right" value="执行">
+
+            </div>
+        </div>
+
+
+        <div class="panel">
+            <div class="panel-heading">
+                <h3 class="panel-title">任务结果</h3>
+            </div>
+            <div class="panel-body">
+                <ul id="task_result_container"></ul>
+            </div>
+        </div>
+
+    </div>
+
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        function SelectFileTransferType(ele) {
+            if ($(ele).val() == 'get') {
+
+                $("#local_file_path").addClass("hide");
+            } else {
+                $("#local_file_path").removeClass("hide");
+            }
+        }
+
+        function HostListDisplayToggle(ele) {
+
+            $(ele).next().toggleClass("hide");
+        }
+
+        function SelectGroup(ele) {
+            $(ele).parent().next().find("input").prop("checked", $(ele).prop("checked"))
+
+        }
+
+        function GetTaskResult(task_id) {
+
+            $.getJSON("{% url 'task_result'  %}", {'task_id': task_id}, function (callback) {
+                console.log(callback);
+                var all_task_done = true;
+                $.each(callback, function (index, ele) {
+                    var li_ele = $("li[bind_host_id='" + ele['id'] + "']");
+                    li_ele.next().text(ele['result']);
+                    $(li_ele.children()[0]).text(ele.status);
+                    if (ele.status == 2) {
+                        all_task_done = false; //有任务未完成
+                    }
+
+                });
+
+                if (all_task_done) {
+                    clearInterval(ResultRefreshObj);
+                    $("#post_task_btn").removeClass("disabled");
+                }
+
+            });//end getJSON
+        }
+
+
+        function PostTask(ele, task_type) {
+
+            var selected_host_ids = [];
+
+            $("input[select_host]:checked").each(function () {
+                selected_host_ids.push($(this).val());
+            });
+
+            console.log(selected_host_ids)
+            if (selected_host_ids.length == 0) {
+                alert("必须选择主机!")
+                return false
+            }
+
+            if (task_type == "cmd") {
+                var cmd_text = $("#cmd_text").val().trim();
+                if (cmd_text.length == 0) {
+
+                    alert("必须输入要执行的命令!")
+                    return false
+                }
+
+                var task_arguments = {
+                    'selected_host_ids': selected_host_ids,
+                    'task_type': 0,//cmd
+                    'cmd': cmd_text,
+                }
+
+            } else {
+
+                var file_transfer_type = $("select[name='file_transfer_type']").val()
+                var local_file_path = $("#local_file_path").val().trim()
+                var remote_file_path = $("#remote_file_path").val().trim()
+                if (file_transfer_type == "send") {
+                    if (local_file_path.length == 0) {
+                        alert("必须输入本地文件路径！")
+                        return false
+                    }
+
+                }
+
+                if (remote_file_path.length == 0) {
+                    alert("必须输入远程文件路径！")
+                    return false
+                }
+
+                var task_arguments = {
+                    'selected_host_ids': selected_host_ids,
+                    'task_type': 1,//file_transfer
+                    'file_transfer_type': file_transfer_type,
+                    'local_file_path': local_file_path,
+                    'remote_file_path': remote_file_path
+
+                }
+
+            }
+
+
+            //再此任务执行完成前，不允许再提交新任务
+            $(ele).addClass("disabled")
+            //提交新任务之前情况任务结果面版
+            $("#task_result_container").empty();
+
+
+            $.post("{%  url 'multitask' %}", {
+                'task_data': JSON.stringify(task_arguments),
+                'csrfmiddlewaretoken': $("input[name='csrfmiddlewaretoken']").val()
+            }, function (callback) {
+
+                console.log(callback);
+
+                var callback = JSON.parse(callback);
+                $.each(callback.selected_hosts, function (index, ele) {
+                    var li_ele = "<li bind_host_id='" + ele['id'] + "'>Host:" + ele.bind_host__host__hostname + "(" + ele.bind_host__host__ip_addr + ")----------------<span></span></li><pre>sdff</pre>";
+                    $("#task_result_container").append(li_ele);
+
+                })
+
+
+                //去后端定时拿结果
+                ResultRefreshObj = setInterval(function () {
+                    GetTaskResult(callback.task_id);
+
+                }, 2000);
+            });//end post
+        }
+
+    </script>
+{% endblock %}

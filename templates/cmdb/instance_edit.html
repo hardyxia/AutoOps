@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}主机详情{% endblock %}
+
+{% block page-header %}资产详情{% endblock %}
+
+{% block page-header-info %}编辑 {{ response.0.id }}
+
+{% endblock %}
+
+{% block page-content %}
+    <form class="form-horizontal" role="form" method="post" action="{% url 'instance_edit' response.0.id %}">
+        {#        {% csrf_token %}#}
+
+        <div class="form-horizontal"></div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">实例名称</label>
+            <div class="col-sm-9">
+                <input readonly="" type="text" class="col-xs-10 col-sm-5" id="form-input-readonly"
+                       value="{{ response.0.id }}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">主机名</label>
+
+            <div class="col-sm-9">
+                <input type="text" id="form-field-1" class="col-xs-10 col-sm-5" name="name"
+                       value="{{ response.0.name }}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">所属区域</label>
+            <div class="col-sm-9">
+                <input type="text" id="form-field-1" class="col-xs-10 col-sm-5" name="zone_id"
+                       value="{{ response.0.zone_id }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">环境</label>
+
+            <div class="col-sm-9">
+                <input type="text" id="form-field-1" class="col-xs-10 col-sm-5" name="key_pair_name"
+                       value="{{ response.0.key_pair_name }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">弹性IP</label>
+
+            <div class="col-sm-9">
+                <input type="text" id="form-field-1" class="col-xs-10 col-sm-5" name="eip_address"
+                       value="{% if response.0.eip_address %}{{ response.0.eip_address }}{% endif %}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">内网IP</label>
+
+            <div class="col-sm-9">
+                <input type="text" id="form-field-1" class="col-xs-10 col-sm-5" name="primary_ip_address"
+                       value="{{ response.0.primary_ip_address }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">操作系统</label>
+
+            <div class="col-sm-9">
+                <input type="text" id="form-field-1" class="col-xs-10 col-sm-5" name="os_name"
+                       value="{{ response.0.os_name }}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">CPU数量</label>
+
+            <div class="col-sm-9">
+                <input type="text" id="form-field-1" class="col-xs-10 col-sm-5" name="cpu"
+                       value="{{ response.0.cpu }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">内存</label>
+
+            <div class="col-sm-9">
+                <input type="text" id="form-field-1" class="col-xs-10 col-sm-5" name="memory"
+                       value="{{ response.0.memory }}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">创建时间</label>
+
+            <div class="col-sm-9">
+                <input type="text" id="form-field-1" class="col-xs-10 col-sm-5" name="creation_time"
+                       value="{{ response.0.creation_time }}">
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">到期时间</label>
+
+            <div class="col-sm-9">
+                <input type="text" id="form-field-1" class="col-xs-10 col-sm-5" name="expired_time"
+                       value="{{ response.0.expired_time }}">
+            </div>
+        </div>
+
+
+        <div class="clearfix form-actions">
+            <div class="col-md-offset-3 col-md-9">
+                <button class="btn btn-info" type="submit">
+                    <i class="icon-ok bigger-110"></i>
+                    保存
+                </button>
+                &nbsp; &nbsp; &nbsp;
+                <a href="{% url 'instance' %}">
+                    <button class="btn" type="button" >
+                        <i class="icon-undo bigger-110"></i>
+                        取消
+                    </button>
+                </a>
+            </div>
+        </div>
+    </form>
+{% endblock %}

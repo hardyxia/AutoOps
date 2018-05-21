@@ -1,0 +1,106 @@
+{% extends 'cmdb/../base.html' %}
+
+{% block title %}主机详情{% endblock %}
+
+{% block page-header %}资产详情{% endblock %}
+
+{% block page-header-info %}查看 {{ response.0.id }} 详情
+
+    <a href="{% url 'instance_delete' response.0.id %}">
+        <button class="btn btn-danger" type="button" style="float: right"> 删除</button>
+    </a>
+    <a href="{% url 'instance_edit' response.0.id %}">
+        <button class="btn btn-info" type="button" style="float: right"> 编辑</button>
+    </a>
+{% endblock %}
+
+{% block page-content %}
+    <form class="form-horizontal">
+
+        <div class="form-horizontal"></div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">实例名称</label>
+            <div class="col-sm-9">
+                <input readonly="" type="text" class="col-xs-10 col-sm-5" id="form-input-readonly"
+                       value="{{ response.0.id }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">主机名</label>
+            <div class="col-sm-9">
+                <input readonly="" type="text" class="col-xs-10 col-sm-5" id="form-input-readonly"
+                       value="{{ response.0.name }}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">所属区域</label>
+            <div class="col-sm-9">
+                <input readonly="" type="text" class="col-xs-10 col-sm-5" id="form-input-readonly"
+                       value="{{ response.0.zone_id }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">环境</label>
+            <div class="col-sm-9">
+                <input readonly="" type="text" class="col-xs-10 col-sm-5" id="form-input-readonly"
+                       value="{{ response.0.key_pair_name }}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">弹性IP</label>
+            <div class="col-sm-9">
+                <input readonly="" type="text" class="col-xs-10 col-sm-5" id="form-input-readonly"
+                       value="{% if response.0.eip_address %}{{ response.0.eip_address }}{% endif %}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">内网IP</label>
+            <div class="col-sm-9">
+                <input readonly="" type="text" class="col-xs-10 col-sm-5" id="form-input-readonly"
+                       value="{{ response.0.primary_ip_address }}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">操作系统</label>
+            <div class="col-sm-9">
+                <input readonly="" type="text" class="col-xs-10 col-sm-5" id="form-input-readonly"
+                       value="{{ response.0.os_name }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">CPU数量</label>
+            <div class="col-sm-9">
+                <input readonly="" type="text" class="col-xs-10 col-sm-5" id="form-input-readonly"
+                       value="{{ response.0.cpu }}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">内存(M)</label>
+            <div class="col-sm-9">
+                <input readonly="" type="text" class="col-xs-10 col-sm-5" id="form-input-readonly"
+                       value="{{ response.0.memory }}">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">创建时间</label>
+            <div class="col-sm-9">
+                <input readonly="" type="text" class="col-xs-10 col-sm-5" id="form-input-readonly"
+                       value="{{ response.0.creation_time }}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">到期时间</label>
+            <div class="col-sm-9">
+                <input readonly="" type="text" class="col-xs-10 col-sm-5" id="form-input-readonly"
+                       value="{{ response.0.expired_time }}">
+            </div>
+        </div>
+    </form>
+{% endblock %}
+

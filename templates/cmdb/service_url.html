@@ -1,0 +1,112 @@
+{% extends 'cmdb/../base.html' %}
+
+{% block title %}服务URL{% endblock %}
+
+{% block page-header %}服务URL{% endblock %}
+
+{% block page-header-info %}查看{% endblock %}
+
+{% block page-content %}
+    <div id="sample-table-2_wrapper" class="dataTables_wrapper" role="grid">
+        <div class="row">
+            {% include 'pg_num.html' %}
+             <div class="col-sm-6">
+                <div class="dataTables_filter" id="sample-table-2_filter">
+                    <a href="{% url 'service_url_add' %}">
+                        <button class="btn-info " type="button" style="float: right"> 添加</button>
+                    </a>
+                </div>
+
+
+            </div>
+        </div>
+
+        <table id="sample-table-2" class="table table-striped table-bordered table-hover dataTable"
+               aria-describedby="sample-table-2_info">
+            <thead>
+            <tr role="row">
+
+                {% for row in title %}
+                    <th class="sorting" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1"
+                        colspan="1" aria-label="Domain: activate to sort column ascending"
+                        style="width: 168px;">{{ row }}
+                    </th>
+                {% endfor %}
+                <th class="sorting" role="columnheader" tabindex="0" aria-controls="sample-table-2" rowspan="1"
+                    colspan="1" aria-label="Domain: activate to sort column ascending" style="width: 168px;">操作
+                </th>
+            </tr>
+            </thead>
+
+
+            <tbody role="alert" aria-live="polite" aria-relevant="all">
+            {% for row in response %}
+                <tr class="odd">
+                    <td class=" "><a href="{% url 'service_url_detail' row.id %}">{{ row.name }}</a></td>
+                    <td class=" "><a href="{{ row.web_url }}">{{ row.web_url }}</a></td>
+                    <td class=" ">{% if row.real_url %}{{ row.real_url }}{% endif %} </td>
+                    <td class=" ">{{ row.get_connection_display }}</td>
+                    <td class=" ">{{ row.get_auth_display }}</td>
+
+                    <td class=" ">
+                        <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
+                            {#                            <a class="blue" href="#">#}
+                            {#                                <i class="icon-zoom-in bigger-130"></i>#}
+                            {#                            </a>#}
+                            <a class="green" href="{% url 'service_url_edit' row.id %}">
+                                <i class="icon-pencil bigger-130"></i>
+                            </a>
+
+                            <a class="red" href="{% url 'service_url_delete' row.id %}">
+                                <i class="icon-trash bigger-130"></i>
+                            </a>
+                        </div>
+
+                        <div class="visible-xs visible-sm hidden-md hidden-lg">
+                            <div class="inline position-relative">
+                                <button class="btn btn-minier btn-yellow dropdown-toggle" data-toggle="dropdown">
+                                    <i class="icon-caret-down icon-only bigger-120"></i>
+                                </button>
+
+                                <ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
+                                    <li>
+                                        <a href="#" class="tooltip-info" data-rel="tooltip" title=""
+                                           data-original-title="View">
+                                    <span class="blue">
+                                        <i class="icon-zoom-in bigger-120"></i>
+                                    </span>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="#" class="tooltip-success" data-rel="tooltip" title=""
+                                           data-original-title="Edit">
+                                    <span class="green"><i class="icon-edit bigger-120">
+                                    </i>
+                                    </span>
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a href="#" class="tooltip-error" data-rel="tooltip" title=""
+                                           data-original-title="Delete">
+                                    <span class="red">
+                                        <i class="icon-trash bigger-120"></i>
+                                    </span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+
+            </tbody>
+        </table>
+
+        {% include 'cmdb/paginator.html' %}
+    </div>
+
+
+{% endblock %}

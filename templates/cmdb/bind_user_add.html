@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}添加用户{% endblock %}
+
+{% block page-header %}系统用户{% endblock %}
+
+{% block page-header-info %}添加
+
+{% endblock %}
+
+{% block page-content %}
+    <form class="form-horizontal" role="form" method="post">
+        {% csrf_token %}
+        <div class="form-horizontal"></div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-input-readonly">用户名</label>
+            <div class="col-sm-9">
+                <input type="text" class="col-xs-10 col-sm-5" id="form-field-1" name="username">
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">SSH类型</label>
+            <div class="col-sm-9">
+                <input type="text" id="form-field-1" class="col-xs-10 col-sm-5" name="ssh_type"
+                       placeholder="请输入0或1,0:密码,1:密钥">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">密码</label>
+
+            <div class="col-sm-9">
+                <input type="text" id="form-field-1" class="col-xs-10 col-sm-5" name="password"
+                       placeholder="选择密钥方式可不填">
+            </div>
+        </div>
+        <!--
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">端口</label>
+
+            <div class="col-sm-9">
+                <input type="text" id="form-field-1" class="col-xs-10 col-sm-5" name="port" >
+            </div>
+        </div>
+        -->
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1">备注</label>
+
+            <div class="col-sm-9">
+                <input type="text" id="form-field-1" class="col-xs-10 col-sm-5" name="comment">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label no-padding-right" for="form-field-1" style="margin-left: 5%">
+                <span style="color: red;">{{ error }}</span>
+            </label>
+
+        </div>
+
+
+        <div class="clearfix form-actions">
+            <div class="col-md-offset-3 col-md-9">
+                <button class="btn btn-info" type="submit">
+                    <i class="icon-ok bigger-110"></i>
+                    保存
+                </button>
+                &nbsp; &nbsp; &nbsp;
+                <a href="{% url 'bind_user' %}">
+                    <button class="btn" type="button">
+                        <i class="icon-undo bigger-110"></i>
+                        取消
+                    </button>
+                </a>
+            </div>
+        </div>
+    </form>
+{% endblock %}
