@@ -1,6 +1,7 @@
 import sys, os
 import time, json
 from concurrent.futures import ThreadPoolExecutor
+from utils.encryption import decrypt_p
 
 import paramiko
 
@@ -12,7 +13,7 @@ def ssh_cmd(task_log_obj):
     try:
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(host.eip_address, host.port, user_obj.username, user_obj.password, timeout=10)
+        ssh.connect(host.eip_address, host.port, user_obj.username, decrypt_p(user_obj.password), timeout=10)
 
         stdin, stdout, stderr = ssh.exec_command(task_log_obj.task.content)
 
