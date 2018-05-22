@@ -46,24 +46,15 @@ class MultiTaskManger(object):
         sub_task_objs = []
 
         for host_id in self.task_data["selected_host_ids"]:
-            sub_task_objs.append(
-                models.TaskLogDetail(
-                    task=task_obj, bind_host_id=host_id, result="init...", status=2
-                )
-            )
+            sub_task_objs.append(models.TaskLogDetail(task=task_obj, bind_host_id=host_id, result="init...", status=2))
 
         models.TaskLogDetail.objects.bulk_create(sub_task_objs)
 
-<<<<<<< HEAD
         task_script_obj = subprocess.Popen(
-            "python %s %s" % (conf.settings.MULTITASK_SCRIPT, task_obj.id),
+            "python3 %s %s" % (conf.settings.MULTITASK_SCRIPT, task_obj.id),
             shell=True,
             stdout=subprocess.PIPE,
         )
-=======
-        task_script_obj = subprocess.Popen("python3 %s %s" % (conf.settings.MULTITASK_SCRIPT, task_obj.id),
-                                           shell=True, stdout=subprocess.PIPE)
->>>>>>> 717516f2ab02f93acaac730a3ed9dc4b5286724d
 
         self.task = task_obj
 
@@ -75,27 +66,20 @@ class MultiTaskManger(object):
         :return:
         """
 
-        task_obj = models.Task.objects.create(
-            user=self.request.user,
-            task_type=self.task_data["task_type"],
-            content=json.dumps(self.task_data),
-        )
+        task_obj = models.Task.objects.create(user=self.request.user,
+                                              task_type=self.task_data["task_type"],
+                                              content=json.dumps(self.task_data), )
 
         sub_task_objs = []
 
         for host_id in self.task_data["selected_host_ids"]:
             sub_task_objs.append(
-                models.TaskLogDetail(
-                    task=task_obj, bind_host_id=host_id, result="init...", status=2
-                )
-            )
+                models.TaskLogDetail(task=task_obj, bind_host_id=host_id, result="init...", status=2))
 
         models.TaskLogDetail.objects.bulk_create(sub_task_objs)
 
-        task_script_obj = subprocess.Popen(
-            "python3 %s %s" % (conf.settings.MULTITASK_SCRIPT, task_obj.id),
-            shell=True,
-            stdout=subprocess.PIPE,
-        )
+        task_script_obj = subprocess.Popen("python3 %s %s" % (conf.settings.MULTITASK_SCRIPT, task_obj.id),
+                                           shell=True,
+                                           stdout=subprocess.PIPE, )
 
         self.task = task_obj
