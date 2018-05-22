@@ -103,13 +103,13 @@ class TaskLogDetailAdmin(admin.ModelAdmin):
     list_display = ['id','task','bind_host','result','status','start_date','end_date']
 
 
-admin.site.register(models.InstanceInfo)
-admin.site.register(models.InstanceGroup)
-admin.site.register(models.BindHost)
-admin.site.register(models.BindUser,BindUserAdmin)
-admin.site.register(models.IDC)
-admin.site.register(models.Region)
-# admin.site.register(models.Session)
-admin.site.register(models.Task,TaskAdmin)
-admin.site.register(models.TaskLogDetail,TaskLogDetailAdmin)
+# admin.site.register(models.InstanceInfo)
+# admin.site.register(models.InstanceGroup)
+# admin.site.register(models.BindHost)
+# admin.site.register(models.BindUser,BindUserAdmin)
+# admin.site.register(models.IDC)
+# admin.site.register(models.Region)
+# # admin.site.register(models.Session)
+# admin.site.register(models.Task,TaskAdmin)
+# admin.site.register(models.TaskLogDetail,TaskLogDetailAdmin)
 

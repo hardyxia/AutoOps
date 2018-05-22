@@ -1,6 +1,13 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+# @Time    : 2018/5/4 17:17
+# @Author  : hardyxia
+# @File    : task_runner.py
+
 import sys, os
 import time, json
 from concurrent.futures import ThreadPoolExecutor
+from utils.encryption import decrypt_p
 
 import paramiko
 
@@ -12,7 +19,13 @@ def ssh_cmd(task_log_obj):
     try:
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(host.eip_address, host.port, user_obj.username, user_obj.password, timeout=10)
+        ssh.connect(
+            host.eip_address,
+            host.port,
+            user_obj.username,
+            decrypt_p(user_obj.password),
+            timeout=10,
+        )
 
         stdin, stdout, stderr = ssh.exec_command(task_log_obj.task.content)
 
@@ -45,19 +58,29 @@ def file_transfer(task_log_obj):
 
         task_data = json.loads(task_log_obj.task.content)
 
-        if task_data['file_transfer_type'] == 'send':
-            sftp.put(task_data['local_file_path'], task_data['remote_file_path'])
-            task_log_obj.result = "send local file [%s] to remote [%s] succeeded!" % (task_data['local_file_path'],
-                                                                                      task_data['remote_file_path'])
+        if task_data["file_transfer_type"] == "send":
+            sftp.put(task_data["local_file_path"], task_data["remote_file_path"])
+            task_log_obj.result = "send local file [%s] to remote [%s] succeeded!" % (
+                task_data["local_file_path"],
+                task_data["remote_file_path"],
+            )
 
         else:  # get
 
-            local_file_path = "%s/%s" % (django.conf.settings.DOWNLOAD_DIR, task_log_obj.task.id)
+            local_file_path = "%s/%s" % (
+                django.conf.settings.DOWNLOAD_DIR,
+                task_log_obj.task.id,
+            )
             if not os.path.isdir(local_file_path):
                 os.mkdir(local_file_path)
-            file_name = task_data['remote_file_path'].split('/')[-1]
-            sftp.get(task_data['remote_file_path'], "%s/%s.%s" % (local_file_path, host.eip_address, file_name))
-            task_log_obj.result = "get remote file [%s] succeeded" % (task_data['remote_file_path'])
+            file_name = task_data["remote_file_path"].split("/")[-1]
+            sftp.get(
+                task_data["remote_file_path"],
+                "%s/%s.%s" % (local_file_path, host.eip_address, file_name),
+            )
+            task_log_obj.result = "get remote file [%s] succeeded" % (
+                task_data["remote_file_path"]
+            )
 
         t.close()
         task_log_obj.status = 0
@@ -68,7 +91,7 @@ def file_transfer(task_log_obj):
     task_log_obj.save()
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     sys.path.append(base_dir)

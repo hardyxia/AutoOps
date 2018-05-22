@@ -23,10 +23,10 @@ class MultiTaskManger(object):
     def call_task(self):
         self.task_parser()
 
-        if self.task_data['task_type'] == 0:  # cmd
+        if self.task_data["task_type"] == 0:  # cmd
             self.cmd_task()
 
-        elif self.task_data['task_type'] == 1:  # file transfer
+        elif self.task_data["task_type"] == 1:  # file transfer
             self.file_transfer_task()
 
     def cmd_task(self):
@@ -37,19 +37,28 @@ class MultiTaskManger(object):
         :return:
         """
 
-        task_obj = models.Task.objects.create(user=self.request.user,
-                                              task_type=self.task_data['task_type'],
-                                              content=self.task_data["cmd"])
+        task_obj = models.Task.objects.create(
+            user=self.request.user,
+            task_type=self.task_data["task_type"],
+            content=self.task_data["cmd"],
+        )
 
         sub_task_objs = []
 
-        for host_id in self.task_data['selected_host_ids']:
-            sub_task_objs.append(models.TaskLogDetail(task=task_obj, bind_host_id=host_id, result='init...', status=2))
+        for host_id in self.task_data["selected_host_ids"]:
+            sub_task_objs.append(
+                models.TaskLogDetail(
+                    task=task_obj, bind_host_id=host_id, result="init...", status=2
+                )
+            )
 
         models.TaskLogDetail.objects.bulk_create(sub_task_objs)
 
-        task_script_obj = subprocess.Popen("python %s %s" % (conf.settings.MULTITASK_SCRIPT, task_obj.id),
-                                           shell=True, stdout=subprocess.PIPE)
+        task_script_obj = subprocess.Popen(
+            "python %s %s" % (conf.settings.MULTITASK_SCRIPT, task_obj.id),
+            shell=True,
+            stdout=subprocess.PIPE,
+        )
 
         self.task = task_obj
 
@@ -61,18 +70,27 @@ class MultiTaskManger(object):
         :return:
         """
 
-        task_obj = models.Task.objects.create(user=self.request.user,
-                                              task_type=self.task_data['task_type'],
-                                              content=json.dumps(self.task_data))
+        task_obj = models.Task.objects.create(
+            user=self.request.user,
+            task_type=self.task_data["task_type"],
+            content=json.dumps(self.task_data),
+        )
 
         sub_task_objs = []
 
-        for host_id in self.task_data['selected_host_ids']:
-            sub_task_objs.append(models.TaskLogDetail(task=task_obj, bind_host_id=host_id, result='init...', status=2))
+        for host_id in self.task_data["selected_host_ids"]:
+            sub_task_objs.append(
+                models.TaskLogDetail(
+                    task=task_obj, bind_host_id=host_id, result="init...", status=2
+                )
+            )
 
         models.TaskLogDetail.objects.bulk_create(sub_task_objs)
 
-        task_script_obj = subprocess.Popen("python %s %s" % (conf.settings.MULTITASK_SCRIPT, task_obj.id),
-                                           shell=True, stdout=subprocess.PIPE)
+        task_script_obj = subprocess.Popen(
+            "python3 %s %s" % (conf.settings.MULTITASK_SCRIPT, task_obj.id),
+            shell=True,
+            stdout=subprocess.PIPE,
+        )
 
         self.task = task_obj

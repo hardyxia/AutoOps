@@ -154,8 +154,8 @@ WEB_SSH = '111.230.87.86:19999'
 
 # 阿里云配置
 VPCUrl = "https://vpc.aliyuncs.com/"
-AccessKeyId = 'xxxx'
-AccessKeySecret = "xxxx"
+AccessKeyId = 'xxxxx'
+AccessKeySecret = "xxxxx"
 RegionId = "cn-shenzhen"
 PageSize = 50
 EndPoint = 'oss-cn-shanghai.aliyuncs.com'

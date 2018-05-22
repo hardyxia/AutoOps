@@ -12,7 +12,7 @@ for i in $(seq 1 30);do
      if [ ! -z $process_id  ];then 
 
          echo 'running str4ack'
-         log_path=/opt/CrazyEye/log/`date +%F`
+         log_path=/opt/AutoOps/log/`date +%F`
          mkdir -p $log_path 
          sudo strace -fp $process_id  -t -o $log_path/session_$2.log
          break; 

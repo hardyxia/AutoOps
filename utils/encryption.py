@@ -26,3 +26,4 @@ def decrypt_p(password):
     token = f.decrypt(p1)
     p2 = token.decode()
     return p2
+

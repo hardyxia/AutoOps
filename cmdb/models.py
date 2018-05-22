@@ -187,7 +187,7 @@ class UserProfileManager(BaseUserManager):
 
 
 class UserProfile(AbstractBaseUser, PermissionsMixin):
-    username = models.CharField(max_length=64, unique=True )
+    username = models.CharField(max_length=64, unique=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
     is_staff = models.BooleanField(
@@ -225,6 +225,23 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         # Simplest possible answer: Yes, always
         return True
 
+
+class Session(models.Model):
+    '''生成用户操作session id '''
+    user = models.ForeignKey('UserProfile')
+    bind_host = models.ForeignKey('BindHost')
+    tag = models.CharField(max_length=128, default='n/a')
+    closed = models.BooleanField(default=False)
+    cmd_count = models.IntegerField(default=0)  # 命令执行数量
+    stay_time = models.IntegerField(default=0, help_text="每次刷新自动计算停留时间", verbose_name="停留时长(seconds)")
+    date = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return '<id:%s user:%s bind_host:%s>' % (self.id, self.user.email, self.bind_host.host)
+
+    class Meta:
+        verbose_name = '审计日志'
+        verbose_name_plural = '审计日志'
 
 
 class Task(models.Model):

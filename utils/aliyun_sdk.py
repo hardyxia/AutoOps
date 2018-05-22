@@ -16,9 +16,12 @@ class AliyunAPI(object):
     通过阿里云SDK获取API返回数据
     """
 
-    def __init__(self, access_key_id=settings.AccessKeyId,
-                 access_key_secret=settings.AccessKeySecret,
-                 region_id='cn-shenzhen'):
+    def __init__(
+        self,
+        access_key_id=settings.AccessKeyId,
+        access_key_secret=settings.AccessKeySecret,
+        region_id="cn-shenzhen",
+    ):
         """
         实例化 传入AccessKeyId ，AccessKeySecret，RegionId
         :param access_key_id:
@@ -28,7 +31,9 @@ class AliyunAPI(object):
         self.access_key_id = access_key_id
         self.access_key_secret = access_key_secret
         self.region_id = region_id
-        self.client = AcsClient(self.access_key_id, self.access_key_secret, self.region_id)
+        self.client = AcsClient(
+            self.access_key_id, self.access_key_secret, self.region_id
+        )
 
     def aliyun_region_result(self, action_model):
         """获取阿里云API返回值，返回字典"""
@@ -46,7 +51,6 @@ class AliyunAPI(object):
         result = json.loads(response.decode())
         return result
 
-
     # 下面2个方法是操作ELB后端
     def aliyun_elb_add_backend(self, LoadBalancerId, BackendServers):
         """
@@ -56,8 +60,9 @@ class AliyunAPI(object):
         :return:
         """
         from aliyunsdkslb.request.v20140515 import AddBackendServersRequest
+
         res = AddBackendServersRequest.AddBackendServersRequest()
-        res.set_accept_format('json')
+        res.set_accept_format("json")
         res.set_LoadBalancerId(LoadBalancerId=LoadBalancerId)
         res.set_BackendServers(BackendServers)
         response = self.client.do_action_with_exception(res)
@@ -71,8 +76,9 @@ class AliyunAPI(object):
         :return:
         """
         from aliyunsdkslb.request.v20140515 import RemoveBackendServersRequest
+
         res = RemoveBackendServersRequest.RemoveBackendServersRequest()
-        res.set_accept_format('json')
+        res.set_accept_format("json")
         res.set_LoadBalancerId(LoadBalancerId=LoadBalancerId)
         res.set_BackendServers(BackendServers)
         response = self.client.do_action_with_exception(res)
@@ -86,8 +92,9 @@ class AliyunAPI(object):
         :return:
         """
         from aliyunsdkslb.request.v20140515 import SetBackendServersRequest
+
         res = SetBackendServersRequest.SetBackendServersRequest()
-        res.set_accept_format('json')
+        res.set_accept_format("json")
         res.set_LoadBalancerId(LoadBalancerId=LoadBalancerId)
         res.set_BackendServers(BackendServers)
         response = self.client.do_action_with_exception(res)
