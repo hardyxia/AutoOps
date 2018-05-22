@@ -1,9 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+<<<<<<< HEAD
 # @Time    : 2018/5/4 17:17
 # @Author  : hardyxia
 # @File    : task_runner.py
 
+=======
+# @Time    : 2018/4/28 15:01
+# @Author  : hardyxia
+# @File    : task_runner.py
+>>>>>>> 717516f2ab02f93acaac730a3ed9dc4b5286724d
 import sys, os
 import time, json
 from concurrent.futures import ThreadPoolExecutor
@@ -19,6 +25,7 @@ def ssh_cmd(task_log_obj):
     try:
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+<<<<<<< HEAD
         ssh.connect(
             host.eip_address,
             host.port,
@@ -26,6 +33,9 @@ def ssh_cmd(task_log_obj):
             decrypt_p(user_obj.password),
             timeout=10,
         )
+=======
+        ssh.connect(host.eip_address, host.port, user_obj.username, decrypt_p(user_obj.password), timeout=10)
+>>>>>>> 717516f2ab02f93acaac730a3ed9dc4b5286724d
 
         stdin, stdout, stderr = ssh.exec_command(task_log_obj.task.content)
 

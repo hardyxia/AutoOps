@@ -54,11 +54,16 @@ class MultiTaskManger(object):
 
         models.TaskLogDetail.objects.bulk_create(sub_task_objs)
 
+<<<<<<< HEAD
         task_script_obj = subprocess.Popen(
             "python %s %s" % (conf.settings.MULTITASK_SCRIPT, task_obj.id),
             shell=True,
             stdout=subprocess.PIPE,
         )
+=======
+        task_script_obj = subprocess.Popen("python3 %s %s" % (conf.settings.MULTITASK_SCRIPT, task_obj.id),
+                                           shell=True, stdout=subprocess.PIPE)
+>>>>>>> 717516f2ab02f93acaac730a3ed9dc4b5286724d
 
         self.task = task_obj
 
