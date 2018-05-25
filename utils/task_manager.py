@@ -36,20 +36,16 @@ class MultiTaskManger(object):
         3.返回任务id
         :return:
         """
-
-        task_obj = models.Task.objects.create(
-            user=self.request.user,
-            task_type=self.task_data["task_type"],
-            content=self.task_data["cmd"],
-        )
-
+        task_obj = models.Task.objects.create(user=self.request.user,
+                                              task_type=self.task_data["task_type"],
+                                              content=self.task_data["cmd"],
+                                              login_ip=self.request.META['REMOTE_ADDR'])
         sub_task_objs = []
 
         for host_id in self.task_data["selected_host_ids"]:
             sub_task_objs.append(models.TaskLogDetail(task=task_obj, bind_host_id=host_id, result="init...", status=2))
 
         models.TaskLogDetail.objects.bulk_create(sub_task_objs)
-
         task_script_obj = subprocess.Popen(
             "python3 %s %s" % (conf.settings.MULTITASK_SCRIPT, task_obj.id),
             shell=True,

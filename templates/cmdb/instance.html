@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'common/base.html' %}
 
 {% block title %}资产信息{% endblock %}
 {% block css %}
@@ -13,7 +13,7 @@
 {% block page-content %}
     <div id="sample-table-2_wrapper" class="dataTables_wrapper" role="grid">
         <div class="row">
-            {% include 'pg_num.html' %}
+            {% include 'common/pg_num.html' %}
              <div class="col-sm-6">
                 <div class="dataTables_filter" id="sample-table-2_filter">
                     <a href="{% url 'instance_add' %}">
@@ -57,13 +57,13 @@
                     <td class=" ">
                         <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
 
-                            <a class="green" href="{% url 'instance_edit' row.id %}">
-                                <i class="icon-pencil bigger-130"></i>
+                            <a class="green" href="{% url 'instance_edit' row.id %}" title="编辑">
+                                <i class="icon-edit bigger-130"></i>
                             </a>
-                            <a class="yellow webssh" href="">
+                            <a class="yellow webssh" href="" title="SSH">
                                 <i class="icon-laptop bigger-130"></i>
                             </a>
-                            <a class="red" href="{% url 'instance_delete' row.id %}">
+                            <a class="red instance_del" href="#" title="删除">
                                 <i class="icon-trash bigger-130"></i>
                             </a>
                         </div>
@@ -112,7 +112,7 @@
         </table>
 
 
-        {% include 'cmdb/paginator.html' %}
+        {% include 'cmdb/../common/paginator.html' %}
     </div>
 
 
@@ -227,4 +227,46 @@
 
 
     </script>
+
+    <script>
+        $(function () {
+
+            $(document).on('click', '.instance_del', function () {
+                var nid = $(this).parent().parent().parent().attr('nid');
+                console.log(nid);
+                swal({
+                    title: "你确定删除",
+                    text: "你将无法恢复",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "确定",
+                    closeOnConfirm: false
+                }, function () {
+                    $.ajax({
+                        headers: {"X-CSRFToken": '{{ csrf_token }}'},
+                        url: "{% url 'instance_delete' %}",
+                        type: 'POST',
+                        data: {'nid': nid},
+                        success: function (data) {
+                            var obj = JSON.parse(data);
+                            if (obj.status) {
+                                swal({title: "删除", text: "已成功删除", type: "success"}, function () {
+                                    window.location.reload();
+                                })
+                            } else {
+                                swal("错误", "删除" + "[ " + obj.error + " ]" + "遇到错误", "error");
+                            }
+                        }
+                    });
+
+
+                });
+
+            });
+
+
+        });
+    </script>
+
 {% endblock %}

@@ -19,13 +19,11 @@ def ssh_cmd(task_log_obj):
     try:
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(
-            host.eip_address,
-            host.port,
-            user_obj.username,
-            decrypt_p(user_obj.password),
-            timeout=10,
-        )
+        ssh.connect(host.eip_address,
+                    host.port,
+                    user_obj.username,
+                    decrypt_p(user_obj.password),
+                    timeout=10, )
 
         stdin, stdout, stderr = ssh.exec_command(task_log_obj.task.content)
 
@@ -52,9 +50,7 @@ def file_transfer(task_log_obj):
     try:
         t = paramiko.Transport((host.eip_address, host.port))
         t.connect(username=user_obj.username, password=decrypt_p(user_obj.password))
-
         sftp = paramiko.SFTPClient.from_transport(t)
-
         task_data = json.loads(task_log_obj.task.content)
 
         if task_data["file_transfer_type"] == "send":
@@ -63,7 +59,6 @@ def file_transfer(task_log_obj):
                                                                                       task_data["remote_file_path"],)
 
         else:  # get
-
             local_file_path = "%s/%s" % (django.conf.settings.DOWNLOAD_DIR,
                                          task_log_obj.task.id,)
             if not os.path.isdir(local_file_path):
@@ -82,7 +77,6 @@ def file_transfer(task_log_obj):
 
 
 if __name__ == "__main__":
-
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     sys.path.append(base_dir)
     os.environ.setdefault("DJANGO_SETTINGS_MODULE", "AutoOps.settings")

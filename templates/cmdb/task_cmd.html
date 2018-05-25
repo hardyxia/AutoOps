@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'common/base.html' %}
 
 {% block title %}执行命令{% endblock %}
 {% block page-header %}执行命令{% endblock %}
@@ -187,7 +187,7 @@
             $("#task_result_container").empty();
 
 
-            $.post("{%  url 'multitask' %}", {
+            $.post("{%  url 'task' %}", {
                 'task_data': JSON.stringify(task_arguments),
                 'csrfmiddlewaretoken': $("input[name='csrfmiddlewaretoken']").val()
             }, function (callback) {
@@ -196,11 +196,10 @@
 
                 var callback = JSON.parse(callback);
                 $.each(callback.selected_hosts, function (index, ele) {
-                    var li_ele = "<li bind_host_id='" + ele['id'] + "'>Host:" + ele.bind_host__host__hostname + "(" + ele.bind_host__host__eip_address + ")----------------<span></span></li><pre>sdff</pre>";
+                    var li_ele = "<li bind_host_id='" + ele['id'] + "'>Host:" + ele.bind_host__host__hostname + "(" + ele.bind_host__host__eip_address + ")----------------<span></span></li><pre>wait...</pre>";
                     $("#task_result_container").append(li_ele);
 
                 })
-
 
                 //去后端定时拿结果
                 ResultRefreshObj = setInterval(function () {

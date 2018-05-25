@@ -5,9 +5,9 @@ from django import forms
 from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
-
-
 from cmdb.models import UserProfile
+# import xadmin
+
 
 
 class UserCreationForm(forms.ModelForm):
@@ -63,13 +63,13 @@ class UserProfileAdmin(BaseUserAdmin):
     # The fields to be used in displaying the User model.
     # These override the definitions on the base UserAdmin
     # that reference specific fields on auth.User.
-    list_display = ('username','is_staff', 'is_admin')
-    list_filter = ('is_admin','is_staff')
+    list_display = ('username', 'is_staff', 'is_admin')
+    list_filter = ('is_admin', 'is_staff')
     fieldsets = (
         (None, {'fields': ('username', 'password')}),
         ('Personal info', {'fields': ('username',)}),
-        ('堡垒机主机授权', {'fields': ('bind_hosts','host_groups')}),
-        ('Permissions', {'fields': ('is_admin','is_staff','user_permissions','groups')}),
+        ('堡垒机主机授权', {'fields': ('bind_hosts', 'host_groups')}),
+        ('Permissions', {'fields': ('is_admin', 'is_staff', 'user_permissions', 'groups')}),
     )
     # add_fieldsets is not a standard ModelAdmin attribute. UserAdmin
     # overrides get_fieldsets to use this attribute when creating a user.
@@ -77,39 +77,39 @@ class UserProfileAdmin(BaseUserAdmin):
         (None, {
             'classes': ('wide',),
             'fields': ('username', 'password1', 'password2')}
-        ),
+         ),
     )
     search_fields = ('username',)
     ordering = ('username',)
-    filter_horizontal = ('user_permissions','groups','bind_hosts','host_groups')
+    filter_horizontal = ('user_permissions', 'groups', 'bind_hosts', 'host_groups')
+
 
 # Now register the new UserAdmin...
+# admin.site.register(UserProfile,UserProfileAdmin)
 admin.site.register(models.UserProfile, UserProfileAdmin)
 # ... and, since we're not using Django's built-in permissions,
 # unregister the Group model from admin.
 admin.site.unregister(Group)
 
 
-
 class BindUserAdmin(admin.ModelAdmin):
-    list_display = ('username','ssh_type','password')
+    list_display = ('username', 'ssh_type', 'password')
 
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ['id','user','task_type','content','date']
+    list_display = ['id', 'user', 'task_type', 'content', 'date']
 
 
 class TaskLogDetailAdmin(admin.ModelAdmin):
-    list_display = ['id','task','bind_host','result','status','start_date','end_date']
+    list_display = ['id', 'task', 'bind_host', 'result', 'status', 'start_date', 'end_date']
 
 
-# admin.site.register(models.InstanceInfo)
+admin.site.register(models.InstanceInfo)
 # admin.site.register(models.InstanceGroup)
-# admin.site.register(models.BindHost)
-# admin.site.register(models.BindUser,BindUserAdmin)
+
+admin.site.register(models.BindUser,BindUserAdmin)
 # admin.site.register(models.IDC)
 # admin.site.register(models.Region)
 # # admin.site.register(models.Session)
 # admin.site.register(models.Task,TaskAdmin)
 # admin.site.register(models.TaskLogDetail,TaskLogDetailAdmin)
-

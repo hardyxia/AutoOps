@@ -16,13 +16,19 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.views.generic.base import RedirectView
-from cmdb.views import home
+from cmdb.views import account
+
+# import xadmin
 
 urlpatterns = [
-    url(r'^favicon.ico$', RedirectView.as_view(url=r'static/favicon.ico')),
-    url(r'^login$', home.login, name='login'),
-    url(r'^logout$', home.logout, name='logout'),
     url(r'^admin/', admin.site.urls),
+    # url(r'^xadmin/', xadmin.site.urls),
+    url(r'^favicon.ico$', RedirectView.as_view(url=r'static/favicon.ico')),
+    url(r'^$', account.IndexView.as_view(), name='index'),
+    url(r'^login$', account.LoginView.as_view(), name='login'),
+    url(r'^logout$', account.LogoutView.as_view(), name='logout'),
+
     url(r'^cmdb/', include('cmdb.urls')),
-    url(r'^$', home.IndexView.as_view(), name='index'),
+    url(r'^release/', include('release.urls')),
+
 ]

@@ -1,0 +1,44 @@
+ <div class="row">
+            <div class="col-sm-6">
+                <div class="dataTables_info" id="sample-table-2_info">共有 {{ total }} 条，每页显示 {{ page }} 条</div>
+            </div>
+
+            <div class="col-sm-6">
+                <div class="dataTables_paginate paging_bootstrap">
+                    <ul class="pagination">
+                        <li>
+                            <a class="older-posts" href="?page=1">
+                                <i class="fa ">首页
+                                </i>
+                            </a>
+                        </li>
+
+                        {% if response.has_previous %}
+                            <li class="prev">
+                                <a href="?page={{ response.previous_page_number }}">
+                                    <i class="icon-double-angle-left"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+
+                        <li>
+                        <span class="page-number">
+                            第 {{ response.number }} 页 / 共 {{ response.paginator.num_pages }} 页
+                        </span>
+                        </li>
+
+                        {% if response.has_next %}
+                            <li class="next"><a href="?page={{ response.next_page_number }}"><i
+                                    class="icon-double-angle-right"></i></a></li>
+                        {% endif %}
+
+                        <li>
+                            <a class="older-posts" href="?page={{ response.paginator.num_pages }}">
+                                <i class="fa ">末页
+                                </i>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>

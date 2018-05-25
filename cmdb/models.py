@@ -163,6 +163,7 @@ class UserProfileManager(BaseUserManager):
             raise ValueError('Users must have an username')
 
         user = self.model(
+
             username=username,
         )
 
@@ -170,15 +171,15 @@ class UserProfileManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, username, password):
+    def create_superuser(self, email, username, password):
         """
         Creates and saves a superuser with the given email, date of
         birth and password.
         """
         user = self.create_user(
-            username,
-            password=password,
 
+            username=username,
+            password=password,
         )
         user.is_admin = True
         user.is_staff = True
@@ -187,6 +188,7 @@ class UserProfileManager(BaseUserManager):
 
 
 class UserProfile(AbstractBaseUser, PermissionsMixin):
+    # email = models.EmailField(verbose_name='email address', max_length=255, unique=True,blank=True, null=True)
     username = models.CharField(max_length=64, unique=True)
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
@@ -203,7 +205,7 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
 
     USERNAME_FIELD = 'username'
 
-    # REQUIRED_FIELDS = ['email',]
+    # REQUIRED_FIELDS = ['username', ]
 
     def get_full_name(self):
         return self.username
@@ -224,6 +226,9 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):
         "Does the user have permissions to view the app `app_label`?"
         # Simplest possible answer: Yes, always
         return True
+
+    class Meta:
+        verbose_name_plural = "用户"
 
 
 class Session(models.Model):
@@ -250,7 +255,7 @@ class Task(models.Model):
     task_type_choices = ((0, 'cmd'), (1, 'file_transfer'))
     task_type = models.SmallIntegerField(choices=task_type_choices)
     content = models.TextField(verbose_name="任务内容")
-
+    login_ip = models.CharField(verbose_name="操作IP", max_length=64, blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

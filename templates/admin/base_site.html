@@ -1,0 +1,11 @@
+{% extends 'admin/base.html' %}
+{% block title %}后台 - AutoOps{% endblock %}
+
+
+{% block branding %}
+    <h1 id="site-name">
+        <a href="{% url 'admin:index' %}">
+          AutoOps </a>
+    </h1>
+{% endblock %}
+{# Workaround to avoid circular template extends errors #}

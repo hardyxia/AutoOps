@@ -49,9 +49,11 @@ class InstanceDeleteView(View):
     def dispatch(self, request, *args, **kwargs):
         return super(InstanceDeleteView, self).dispatch(request, *args, **kwargs)
 
-    def get(self, request, instance_id, *args, **kwargs):
-        models.InstanceInfo.objects.filter(id=instance_id).delete()
-        return redirect(reverse('instance'))
+    def post(self, request, *args, **kwargs):
+        ret = {'status': True, 'error': None, }
+        id = request.POST.get('nid')
+        models.InstanceInfo.objects.filter(id=id).delete()
+        return HttpResponse(json.dumps(ret))
 
 
 class InstanceAddView(View):
@@ -188,9 +190,11 @@ class BindUserDeleteView(View):
     def dispatch(self, request, *args, **kwargs):
         return super(BindUserDeleteView, self).dispatch(request, *args, **kwargs)
 
-    def get(self, request, user_id, *args, **kwargs):
-        models.BindUser.objects.filter(id=user_id).delete()
-        return redirect(reverse('bind_user'))
+    def post(self, request, *args, **kwargs):
+        ret = {'status': True, 'error': None, }
+        id = request.POST.get('nid')
+        models.BindUser.objects.filter(id=id).delete()
+        return HttpResponse(json.dumps(ret))
 
 
 class ServiceUrlView(View):
@@ -229,9 +233,11 @@ class ServiceUrlDeleteView(View):
     def dispatch(self, request, *args, **kwargs):
         return super(ServiceUrlDeleteView, self).dispatch(request, *args, **kwargs)
 
-    def get(self, request, url_id, *args, **kwargs):
-        models.ServiceUrl.objects.filter(id=url_id).delete()
-        return redirect(reverse('service_url'))
+    def post(self, request, *args, **kwargs):
+        ret = {'status': True, 'error': None, }
+        id = request.POST.get('nid')
+        models.ServiceUrl.objects.filter(id=id).delete()
+        return HttpResponse(json.dumps(ret))
 
 
 class ServiceUrlEditView(View):
@@ -271,8 +277,11 @@ class ServiceUrlAddView(View):
             data = json.dumps(request.POST)
             dic = json.loads(data)
             del dic['csrfmiddlewaretoken']
-            # dic["connection"] = int(dic["connection"])
-            # dic["auth"] = int(dic["auth"])
+            if int(dic['connection']) == 1:
+                if not dic.get("web_url").startswith('http://') or \
+                        not dic.get("web_url").startswith('https://'):
+                    dic["web_url"] = "http://%s" % dic["web_url"]
+            
             models.ServiceUrl.objects.create(**dic)
             return redirect(reverse('service_url'))
         except Exception as e:
@@ -302,27 +311,3 @@ class WebSSHView(View):
         models.WebHistory.objects.create(user=request.user, ip=login_ip, login_user=obj.bind_user.username, host=ip)
         # print(ret)
         return HttpResponse(json.dumps(ret))
-
-
-'''
-@login_required
-@csrf_exempt
-def web_ssh(request):
-    if request.method == 'POST':
-        # print(request.POST)
-        id = request.POST.get('id', None)
-        obj = models.InstanceInfo.objects.get(id=id)
-
-        # ip = obj.eip_address + ":" + obj.bind_user.port
-        # ip = '%s:%s' % (obj.eip_address, obj.bind_user.port)
-        ip = obj.eip_address
-        port = obj.port
-        username = obj.bind_user.username
-        password = obj.bind_user.password
-        ret = {"ip": ip, "port": port, "username": username, 'password': password, "static": True}
-        login_ip = request.META['REMOTE_ADDR']
-
-        models.WebHistory.objects.create(user=request.user, ip=login_ip, login_user=obj.bind_user.username, host=ip)
-        # print(ret)
-        return HttpResponse(json.dumps(ret))
-'''

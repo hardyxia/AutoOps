@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
@@ -27,17 +26,20 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
-
 # Application definition
 
 INSTALLED_APPS = [
+    'cmdb.apps.SuitConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cmdb.apps.CmdbConfig',
+    'cmdb',
+    # 'xadmin',
+    # 'crispy_forms',
+
 ]
 
 MIDDLEWARE = [
@@ -70,7 +72,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'AutoOps.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
@@ -96,7 +97,6 @@ DATABASES = {
     },
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
@@ -115,7 +115,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -128,22 +127,23 @@ DATETIME_FORMAT = 'Y-m-d H:i:s'
 DATE_FORMAT = 'Y-m-d'
 TIME_FORMAT = '%Y-%m-%d %H:%M:%S'
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
 STATIC_URL = '/static/'
 
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
-
 AUTH_USER_MODEL = 'cmdb.UserProfile'
-AUDIT_LOG_DIR = os.path.join(BASE_DIR,'log')
-MULTITASK_SCRIPT= os.path.join(BASE_DIR,'utils/task_runner.py')
+AUDIT_LOG_DIR = os.path.join(BASE_DIR, 'log')
+MULTITASK_SCRIPT = os.path.join(BASE_DIR, 'utils/task_runner.py')
 
-DOWNLOAD_DIR = os.path.join(BASE_DIR,'downloads')
+DOWNLOAD_DIR = os.path.join(BASE_DIR, 'downloads')
 
 # 登录页
 LOGIN_URL = '/login'
@@ -151,13 +151,53 @@ LOGIN_URL = '/login'
 # WEB_SSH = '192.168.2.194:9999'
 WEB_SSH = '111.230.87.86:19999'
 
-
 # 阿里云配置
 VPCUrl = "https://vpc.aliyuncs.com/"
-AccessKeyId = 'xxxxx'
-AccessKeySecret = "xxxxx"
+AccessKeyId = 'xxx'
+AccessKeySecret = "xxx"
 RegionId = "cn-shenzhen"
 PageSize = 50
 EndPoint = 'oss-cn-shanghai.aliyuncs.com'
 Domain = 'xieke-img.oss-cn-shanghai.aliyuncs.com'
 
+# Jenkins信息
+JENKINS_CONFIG = {
+    'url': 'http://192.168.2.15:8888/',
+    'username': 'admin',
+    'password': '123456',
+}
+
+
+
+# seesion有效期
+SESSION_SAVE_EVERY_REQUEST = False
+SESSION_COOKIE_AGE = 60 * 60 * 24
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_NAME = "session_id"
+
+# Redis 配置
+# # 配置session引擎SESSION_ENGINE为redis，配置此处session会存储在redis中，不会再去操作数据库了
+# SESSION_ENGINE = 'redis_sessions.session'
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+SESSION_REDIS = {
+    'host': 'localhost',
+    'port': 6379,
+    'db': 0,
+    'password': 'ch3dlwqnmddghasd',
+    'prefix': 'session',
+    'socket_timeout': 1
+}
+
+# 缓存
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379/1",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+            "PASSWORD": "ch3dlwqnmddghasd"
+        }
+    }
+}
+REDIS_TIMEOUT = 60 * 30  # 设置缓存时间
